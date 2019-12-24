@@ -1,0 +1,276 @@
+@charset "shift_jis";
+
+
+body {
+	font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", Osaka, "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro";
+	font-size: 75%;
+	line-height: 2;
+	color: #729646;
+	background-color: #dfe3db;
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+	background-image: url(images/body_bg.jpg);
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-attachment:fixed;
+}
+
+h1,h2,h3,h4,h5,p,ul,ol,li,dl,dt,dd,form{
+	margin: 0px;
+	padding: 0px;
+}
+
+ul{
+	list-style-type: none;
+}
+
+img {
+	border: none;
+}
+
+input,textarea,select {
+	font-size: 1em;
+}
+
+form {
+	margin: 0px;
+}
+
+table {
+	border-collapse:collapse;
+	font-size: 100%;
+	border-spacing: 0;
+}
+
+
+
+/*リンク設定
+---------------------------------------------------------------------------*/
+a {
+	color: #729646;		/*リンクの文字色*/
+}
+
+a:hover {
+	color: #7e6b5a;		/*カーソルオーバー時の文字色*/
+	text-decoration: none;	/*オーバー時に下線を消す設定。入れたままがいいならこの１行削除。*/
+}
+
+
+
+/*コンテナー（HPを囲むボックス）
+---------------------------------------------------------------------------*/
+#container {
+	width: 943px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: left;
+}
+
+
+
+/* ヘッダー
+---------------------------------------------------------------------------*/
+#header {
+	background-image: url(images/shirahama_heading.jpg);	/*ヘッダー背景画像*/
+	background-repeat: no-repeat;
+	height: 140px;	/*ヘッダーの高さ。背景画像の高さに2を加えた数字にする。*/
+	width: 940px;
+	position: relative;
+	margin-bottom: 3px;
+	border: 1px solid #a3c180;
+	background-position: center center;
+	background-color: #FFFFFF;
+}
+
+#header h1 {
+	font-size: 11px;	/*h1タグの文字サイズ*/
+	color: #647D46;		/*h1タグの文字色*/
+	line-height: 13px;
+	position: absolute;
+	right: 20px;	/*ヘッダーに対して右から10pxの位置に配置*/
+	bottom: 10px;	/*ヘッダーに対して下から10pxの位置に配置*/
+}
+
+#header h2 {
+	font-size: 40px;
+	text-align: center;
+}
+
+
+
+/*ロゴ画像
+---------------------------------------------------------------------------*/
+#logo {
+	padding-bottom: 3px;
+}
+
+
+
+/*メニュー
+---------------------------------------------------------------------------*/
+#menu {
+	float: left;
+	width: 200px;
+	padding-bottom: 50px;
+}
+
+#menu h3 {
+	font-size: 100%;
+	color: #729646;				/*h3タグの文字色*/
+	background-color: #FFFFFF;	/*h3タグの背景色*/
+	padding-left: 20px;
+	border: 1px solid #a3c180;	/*h3タグの枠線色*/
+}
+
+#menu p {
+	padding-top: 0.5em;
+	padding-bottom: 1em;
+}
+
+
+
+/*メニューのビュー
+---------------------------------------------------------------------------*/
+ul.menu {
+	margin-bottom: 1em;
+}
+
+ul.menu li {
+	margin-bottom: 3px;
+}
+
+ul.menu a {
+	line-height: 60px;
+	color: #729646;	/*メニューの文字色*/
+	text-decoration: none;
+	background-image: url(images/menu_bg.gif);	/*メニューの背景画像*/
+	background-repeat: no-repeat;
+	display: block;
+	height: 60px;
+	width: 180px;
+	background-position: top;	/*画像の上半分だけを表示させる設定*/
+	padding-left: 20px;
+	overflow: hidden;
+}
+
+table.menu a {
+	line-height: 60px;
+	color: #729646;	/*メニューの文字色*/
+	text-decoration: none;
+	background-image: url(images/menu_bg.gif);	/*メニューの背景画像*/
+	background-repeat: no-repeat;
+	display: block;
+	height: 60px;
+	width: 180px;
+	background-position: top;	/*画像の上半分だけを表示させる設定*/
+	padding-left: 20px;
+	overflow: hidden;
+}
+
+ul.menu a:hover {
+	background-position: bottom;/*カーソルオーバー時に画像の下半分だけを表示させる設定*/
+	color: #7e6b5a;
+}
+
+
+
+/*メイン
+---------------------------------------------------------------------------*/
+#main {
+	width: 720px;
+	float: right;
+	padding-bottom: 50px;
+}
+
+#main h2 {
+	font-size: 100%;
+	background-color: #FFFFFF;
+	border-bottom: 4px solid #647D46;		/*h2タグの下線*/
+	background-image: url(images/h2bg.gif);	/*h2タグの背景画像*/
+	background-position: bottom;
+	background-repeat: repeat-x;
+	border-top: 1px solid #E8EFDF;			/*h2タグの上線*/
+	padding: 5px 5px 3px 10px;
+	color: #647D46;
+}
+
+#main p {
+	padding: 0.5em 10px 1em;
+}
+
+/*メインコンテンツ内のボックス*/
+.mainbox {
+	background-color: #FFFFFF;	/*背景色*/
+	border: 1px solid #a3c180;	/*枠線色*/
+	padding: 5px;				/*余白*/
+	margin-bottom: 2em;
+}
+
+
+
+/*フッター
+---------------------------------------------------------------------------*/
+#footer {
+	text-align: center;
+	clear: both;
+	width: 100%;
+}
+
+
+
+/*トップページの「What's New」部分
+---------------------------------------------------------------------------*/
+#main dl.new {
+	width: 688px;			/*What's Newボックスの幅*/
+	height: 140px;			/*What's Newボックスの高さ*/
+	overflow: auto;
+	padding: 10px;
+}
+
+#main dl.new dt {
+	font-weight: bold;		/*日付の色を太字にする*/
+}
+
+#main dl.new dd {
+	border-bottom: 1px solid #E8EFDF;	/*日付ごとに入る下線*/
+}
+
+
+
+/*テーブル
+---------------------------------------------------------------------------*/
+.ta1 {
+	width: 708px;
+}
+
+.ta1, .ta1 td, .ta1 th{
+	border: 1px solid #a3c180;
+}
+
+.ta1 td, .ta1 th{
+	padding: 10px;	/*テーブル内の余白*/
+}
+
+.ta1 th{
+	background-color: #EAF1E2;	/*左側thタグの背景色*/
+	width: 150px;				/*左側thタグの幅*/
+	text-align: center;
+}
+
+
+
+/*その他
+---------------------------------------------------------------------------*/
+.color1 {
+	color: #7e6b5a;
+}
+
+.look {
+	background-color: #F3F0ED;
+}
+
+.mb1em {
+	margin-bottom: 1em;
+}

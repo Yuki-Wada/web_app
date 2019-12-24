@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+<head>
+	{% include "app/common_meta_info.html" %}
+	{% block meta_info %}{% endblock %}
+	<link href="static/style.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="static/js/jquery-1.12.4.min.js"></script>
+	<title>{{ title }}</title>
+</head>
+	<body>
+		<div id="container">
+			<div id="header">{% include "app/header.html" %}</div>
+			<div id="head_menu">{% include "app/head_menu.html" %}</div>
+			<hr>
+			<div id="menu">{% include "app/side_menu.html" %}</div>
+			<div id="main">{% block content %}{% endblock %}</div>
+			<div id="footer">{% include "app/footer.html" %}</div>
+		</div>
+	</body>
+</html>

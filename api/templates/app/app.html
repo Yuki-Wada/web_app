@@ -1,0 +1,61 @@
+{% extends 'app/layout.html' %}
+
+{% block meta_info %}
+<meta name="description" content="雑記" />
+<meta name="keywords" content="数学、プログラミング、機械学習、ウェブアプリケーション" />
+{% endblock %}
+
+{% block content %}
+<div class="mainbox">
+    <p id="participant_count"></p>
+    <p id="input">
+        <input type="text" id="msg" value="> message"/>
+        <button id="sendBtn">send</button>
+    </p>
+    <ul id="rcv"></ul>
+
+    <script type="text/javascript">
+        const host = "ws://192.168.11.16:8889/pipe";
+        let ws = new WebSocket(host);
+        
+        let on_open = function(){
+            message = {};
+            message['type'] = 'initialize';
+            ws.send(JSON.stringify(message));
+        };
+        let send_message = function(){
+            message = {};
+            message['type'] = 'input_message';
+            message['message'] = $("#msg").val()
+            ws.send(JSON.stringify(message));
+        };
+
+        let on_recieve_message = function(message){
+            var message_data = JSON.parse(message.data);
+
+            var participant_count = message_data['participant_count'];
+            $("#participant_count").html('現在 ' + participant_count + ' 人の方が参加しています。' );
+
+            if (message_data['is_active'])
+                $("#input").show();
+            else
+                $("#input").hide();
+
+            if (!message_data['input_message'])
+            {
+                return;
+            }
+
+            var chat_id = message_data['chat_id'];
+            var message = message_data['message'];
+            var time = message_data['time'];
+            var string_txt = chat_id +": " + message + "[" + time + "]";
+            $("#rcv").append("<li>" + string_txt + "</li>")
+        };
+
+        ws.onopen = on_open;
+        $("#sendBtn").on("click", send_message);
+        ws.onmessage = on_recieve_message;
+    </script>
+</div>
+{% endblock %}
