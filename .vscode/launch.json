@@ -12,16 +12,14 @@
             "cwd": "${workspaceRoot}",
             "program": "run.py",
             "args": [
-                "run",
-                "--port", "8895",
-                "--with-threads",
-                // "--without-threads",
+                // "--with-threads",
+                "--without-threads",
                 "--debugger",
                 // "--no-debugger",
                 "--reload",
                 // "--no-reload",
             ],
-        },        
+        },
         {
             "name": "Flask",
             "type": "python",
@@ -35,7 +33,7 @@
             "gevent": true,
             "args": [
                 "run",
-                "--port", "8895",
+                "--port", "8888",
                 "--with-threads",
                 // "--without-threads",
                 "--debugger",
