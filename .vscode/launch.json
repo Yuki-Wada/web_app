@@ -41,7 +41,7 @@
                 "--reload",
                 // "--no-reload",
             ],
-        },        
+        },
         {
             "name": "Python: Current File",
             "type": "python",

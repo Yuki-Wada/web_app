@@ -5,6 +5,7 @@ __pycache__/
 build/
 dist/
 data/original/
+data/ssl/
 experiments/
 *egg-info/
 *.code-workspace
