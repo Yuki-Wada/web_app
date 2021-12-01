@@ -1,32 +1,32 @@
-import json
-import sqlite3
-import pandas as pd
-from flask import request, jsonify
-
-"""
-Train a maze task.
-"""
-
-import os
-import argparse
-import logging
-from itertools import product
 import random
-from queue import Queue
 import numpy as np
+from flask import url_for
 
-class MazeEnvironment: 
-    def __init__(self, maze_file):
+
+def get_default_maze_text():
+    from api import app
+    import os
+    default_maze_path = os.path.join(app.static_folder, 'maze.txt')
+
+    with open(default_maze_path, 'r') as f:
+        maze_text = f.read()
+    return maze_text
+
+
+class MazeEnvironment:
+    def __init__(self, maze_text=None):
+        if maze_text is None:
+            maze_text = get_default_maze_text()
+
         self.row = 0
         self.col = 0
         self.lines = []
-        with open(maze_file, 'r') as f:
-            for line in f.readlines():
-                line = line.strip()
-                self.lines.append(line)
-                self.col = max(self.col, len(line))
-                self.row += 1
-        
+        for line in maze_text.splitlines():
+            line = line.strip()
+            self.lines.append(line)
+            self.col = max(self.col, len(line))
+            self.row += 1
+
         self.maze = np.zeros((self.row, self.col), dtype=np.uint8)
         self.start = None
         self.goal = None
@@ -36,18 +36,20 @@ class MazeEnvironment:
                     self.maze[i, j] = 1
                 elif ch == 'S':
                     if self.start is not None:
-                        raise ValueError('It is not permitted that multiple starts exist.')
+                        raise ValueError(
+                            'It is not permitted that multiple starts exist.')
                     self.start = (i, j)
                 elif ch == 'G':
                     if self.goal is not None:
-                        raise ValueError('It is not permitted that multiple goals exist.')
+                        raise ValueError(
+                            'It is not permitted that multiple goals exist.')
                     self.goal = (i, j)
-        
+
         if self.start is None:
             raise ValueError('It is not permitted that no start exists.')
         if self.goal is None:
             raise ValueError('It is not permitted that no goal exists.')
-        
+
         self.state = self.start
 
     def reset(self):
@@ -87,7 +89,8 @@ class MazeEnvironment:
                     reward = -1
                     info['effective_action'] = True
         else:
-            raise ValueError('The args "direction" should be "R", "L", "D" or "U" either.')
+            raise ValueError(
+                'The args "direction" should be "R", "L", "D" or "U" either.')
 
         is_terminated = self.state == self.goal
 
@@ -115,10 +118,10 @@ class MazeEnvironment:
                 colors[:, :, 0][cond] = triplet[0][cond]
                 colors[:, :, 1][cond] = triplet[1][cond]
                 colors[:, :, 2][cond] = triplet[2][cond]
-            
+
         colors *= 255
         colors = np.clip(colors, 0, 255).astype(np.int)
-        
+
         return colors
 
     def is_goal(self, state):
@@ -151,17 +154,20 @@ class MazeEnvironment:
         v_value[self.goal] = 0
         return v_value
 
+
 def get_action_for_v_value(env, v_value, state):
     directions = ['R', 'L', 'D', 'U']
     max_v = None
     for direction in directions:
         next_state, _, _, info = env.step(direction)
-        if info['effective_action'] and (max_v is None or max_v < v_value[next_state]):
+        if info['effective_action'] and (
+                max_v is None or max_v < v_value[next_state]):
             action = direction
             max_v = v_value[next_state]
         env.locate(state)
 
     return action
+
 
 def get_action_for_q_value(env, q_value, state, epsilon):
     directions = ['R', 'L', 'D', 'U']
@@ -176,11 +182,12 @@ def get_action_for_q_value(env, q_value, state, epsilon):
                 action_index = i
                 max_q = q_value[state][i]
         env.locate(state)
-    
+
     if np.random.uniform() < epsilon:
         return random.sample(possible_pairs, 1)[0]
 
     return action, action_index
+
 
 class ValueIterTrainer:
     def __init__(
@@ -189,8 +196,10 @@ class ValueIterTrainer:
             iter_count: int = 20,
             max_steps: int = 1000,
             gamma: float = 0.95,
-        ):
-        self.env = MazeEnvironment('api/maze.txt')
+
+        maze_text: str = None,
+    ):
+        self.env = MazeEnvironment(maze_text)
         self.v_value = self.env.get_initial_v_value()
 
         self.warm_up_iter_count = warm_up_iter_count
@@ -213,7 +222,8 @@ class ValueIterTrainer:
                     self.env.locate(state)
                     next_state, reward, _, info = self.env.step(direction)
                     if info['effective_action']:
-                        new_vs.append(reward + self.gamma * self.v_value[next_state])
+                        new_vs.append(
+                            reward + self.gamma * self.v_value[next_state])
                 self.v_value[state] = max(new_vs)
 
     def warm_up(self):
@@ -230,7 +240,7 @@ class ValueIterTrainer:
                 }
             self.curr_iter += 1
             self.curr_step = 0
-            
+
             self.update_v_value()
             self.prev_state = self.env.reset()
 
@@ -238,7 +248,8 @@ class ValueIterTrainer:
 
         else:
             self.curr_step += 1
-            action = get_action_for_v_value(self.env, self.v_value, self.prev_state)
+            action = get_action_for_v_value(
+                self.env, self.v_value, self.prev_state)
             state, _, is_terminated, _ = self.env.step(action)
 
             self.prev_state = state
@@ -255,6 +266,7 @@ class ValueIterTrainer:
             'step': self.curr_step,
         }
 
+
 class SarsaLambdaTrainer:
     def __init__(
             self,
@@ -266,8 +278,10 @@ class SarsaLambdaTrainer:
             alpha: float = 0.1,
             epsilon: float = 0.1,
             lambda_value: float = 0.2,
-        ):
-        self.env = MazeEnvironment('api/maze.txt')
+
+        maze_text: str = None,
+    ):
+        self.env = MazeEnvironment(maze_text)
         self.q_value = self.env.get_initial_q_value()
 
         self.warm_up_iter_count = warm_up_iter_count
@@ -301,20 +315,30 @@ class SarsaLambdaTrainer:
                 self.env, self.q_value, self.prev_state, self.curr_epsilon)
 
             for _ in range(self.max_steps):
-                state, reward, is_terminated, _ = self.env.step(self.prev_action)
-                reward = self.goal_reward if is_terminated and self.curr_step < int(self.max_steps * 0.975) else -1
-                action, action_index = get_action_for_q_value(self.env, self.q_value, state, self.curr_epsilon)
+                state, reward, is_terminated, _ = self.env.step(
+                    self.prev_action)
+                reward = self.goal_reward if is_terminated and self.curr_step < int(
+                    self.max_steps * 0.975) else -1
+                action, action_index = get_action_for_q_value(
+                    self.env, self.q_value, state, self.curr_epsilon)
 
                 if self.prev_action is not None:
-                    delta = reward + self.gamma * self.q_value[state][action_index] - self.q_value[self.prev_state][self.prev_action_index]
+                    delta = reward + self.gamma * \
+                        self.q_value[state][action_index] - \
+                        self.q_value[self.prev_state][self.prev_action_index]
 
                     x = np.zeros_like(self.q_value)
                     x[self.prev_state][self.prev_action_index] = 1
                     z = self.gamma * self.lambda_value * self.z + \
-                        (1 - self.alpha * self.gamma * self.lambda_value * self.z[self.prev_state][self.prev_action_index]) * x
+                        (1 - self.alpha * self.gamma * self.lambda_value *
+                         self.z[self.prev_state][self.prev_action_index]) * x
 
-                    self.q_value += self.alpha * (delta + self.q_value[self.prev_state][self.prev_action_index] - self.q_value_old) * z
-                    self.q_value -= self.alpha * (self.q_value[self.prev_state][self.prev_action_index] - self.q_value_old) * x
+                    self.q_value += self.alpha * \
+                        (delta + self.q_value[self.prev_state]
+                         [self.prev_action_index] - self.q_value_old) * z
+                    self.q_value -= self.alpha * \
+                        (self.q_value[self.prev_state]
+                         [self.prev_action_index] - self.q_value_old) * x
                     self.q_value_old = self.q_value[state][action_index]
 
                 self.prev_state = state
@@ -350,19 +374,28 @@ class SarsaLambdaTrainer:
         else:
             self.curr_step += 1
             state, reward, is_terminated, _ = self.env.step(self.prev_action)
-            reward = self.goal_reward if is_terminated and self.curr_step < int(self.max_steps * 0.975) else -1
-            action, action_index = get_action_for_q_value(self.env, self.q_value, state, self.curr_epsilon)
+            reward = self.goal_reward if is_terminated and self.curr_step < int(
+                self.max_steps * 0.975) else -1
+            action, action_index = get_action_for_q_value(
+                self.env, self.q_value, state, self.curr_epsilon)
 
             if self.prev_action is not None:
-                delta = reward + self.gamma * self.q_value[state][action_index] - self.q_value[self.prev_state][self.prev_action_index]
+                delta = reward + self.gamma * \
+                    self.q_value[state][action_index] - \
+                    self.q_value[self.prev_state][self.prev_action_index]
 
                 x = np.zeros_like(self.q_value)
                 x[self.prev_state][self.prev_action_index] = 1
                 z = self.gamma * self.lambda_value * self.z + \
-                    (1 - self.alpha * self.gamma * self.lambda_value * self.z[self.prev_state][self.prev_action_index]) * x
+                    (1 - self.alpha * self.gamma * self.lambda_value *
+                     self.z[self.prev_state][self.prev_action_index]) * x
 
-                self.q_value += self.alpha * (delta + self.q_value[self.prev_state][self.prev_action_index] - self.q_value_old) * z
-                self.q_value -= self.alpha * (self.q_value[self.prev_state][self.prev_action_index] - self.q_value_old) * x
+                self.q_value += self.alpha * \
+                    (delta + self.q_value[self.prev_state]
+                     [self.prev_action_index] - self.q_value_old) * z
+                self.q_value -= self.alpha * \
+                    (self.q_value[self.prev_state]
+                     [self.prev_action_index] - self.q_value_old) * x
                 self.q_value_old = self.q_value[state][action_index]
 
             self.prev_state = state

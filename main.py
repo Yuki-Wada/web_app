@@ -1,7 +1,6 @@
-from api.views import app, sockets
+from api.route import app
 from gevent.pywsgi import WSGIServer
 from geventwebsocket.handler import WebSocketHandler
-from flask_sockets import worker
 
 if __name__ == '__main__':
     host = '0.0.0.0'
