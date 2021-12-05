@@ -3,12 +3,13 @@ import datetime
 import pandas as pd
 import sqlite3
 
-from flask import request, jsonify
+from flask import render_template, request, jsonify
 
 from api import app, sockets
 
 from api.views.maze import visualize_maze_client
 from api.views.reversi import play_reversi as play_reversi_impl
+from api.views.network import get_network_json
 
 trainer = None
 
@@ -52,6 +53,16 @@ def login():
         }
 
     return jsonify(json_data)
+
+
+@app.route('/network', methods=['GET'])
+def network():
+    return render_template('network.html')
+
+
+@app.route('/network_json', methods=['POST'])
+def network_json():
+    return jsonify(get_network_json())
 
 
 @sockets.route('/train_maze')
