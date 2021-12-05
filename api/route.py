@@ -10,7 +10,7 @@ from api import app, sockets
 from api.views.maze import visualize_maze_client
 from api.views.reversi import play_reversi as play_reversi_impl
 from api.views.network import get_network_json
-
+from api.models.db.bigquery_test import select_bigquery_test
 trainer = None
 
 
@@ -63,6 +63,11 @@ def network():
 @app.route('/network_json', methods=['POST'])
 def network_json():
     return jsonify(get_network_json())
+
+
+@app.route('/bigquery_test', methods=['GET'])
+def bigquery_test():
+    return jsonify(select_bigquery_test())
 
 
 @sockets.route('/train_maze')

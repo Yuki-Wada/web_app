@@ -11,4 +11,4 @@ CORS(app)
 
 sockets = Sockets(app)
 
-# bigquery_client = bigquery.Client()
+bigquery_client = bigquery.Client()
