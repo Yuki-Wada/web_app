@@ -1,7 +1,6 @@
 .gitattributes
 __pycache__/
-.venv/
-.venv_wsl/
+.vscode/
 build/
 dist/
 data/original/

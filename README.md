@@ -82,3 +82,10 @@
     ```
     gcloud app deploy
     ```
+
+## Google Cloud Run
+### 実行
+1. 以下のコマンドを実行
+    ```
+    gcloud run deploy
+    ```

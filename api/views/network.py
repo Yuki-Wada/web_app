@@ -72,7 +72,7 @@ def to_network_json(graph, is_expanded=True):
         nodes.append({
             'id': parent_node['id'],
             'label': parent_node['label'],
-            'bbbbbbbbbbbbbbbb': 0 if is_expanded else depth,
+            'hidden_count': 0 if is_expanded else depth,
             'hidden': is_hidden,
             'expanded': is_expanded,
             'color': color,

@@ -50,14 +50,14 @@ function draw_network(data) {
                 }
             }
             nodes.forEach(function (child_node) {
-                let updated_bbbbbbbbbbbbbbbb = child_node.bbbbbbbbbbbbbbbb;
+                let updated_hidden_count = child_node.hidden_count;
                 if (child_node_id_set.has(child_node.id)) {
-                    updated_bbbbbbbbbbbbbbbb += increment;
+                    updated_hidden_count += increment;
                 }
                 update_info.push({
                     id: child_node.id,
-                    bbbbbbbbbbbbbbbb: updated_bbbbbbbbbbbbbbbb,
-                    hidden: (updated_bbbbbbbbbbbbbbbb > 0),
+                    hidden_count: updated_hidden_count,
+                    hidden: (updated_hidden_count > 0),
                 });
             });
             nodes.update(update_info);
@@ -71,11 +71,11 @@ function draw_network(data) {
 
 function get_test_json() {
     let nodes = [
-        { id: 1, label: "Node 1", bbbbbbbbbbbbbbbb: 0, hidden: false, expanded: true, color: 'red' },
-        { id: 2, label: "Node 2", size: 20, bbbbbbbbbbbbbbbb: 0, hidden: false,  expanded: true, color: 'red' },
-        { id: 3, label: "Node 3", bbbbbbbbbbbbbbbb: 0, hidden: false,  expanded: true, color: 'red' },
-        { id: 4, label: "Node 4", bbbbbbbbbbbbbbbb: 0, hidden: false,  expanded: true, color: 'red' },
-        { id: 5, label: "Node 5", bbbbbbbbbbbbbbbb: 0, hidden: false,  expanded: true, color: 'red' },
+        { id: 1, label: "Node 1", hidden_count: 0, hidden: false, expanded: true, color: 'red' },
+        { id: 2, label: "Node 2", size: 20, hidden_count: 0, hidden: false,  expanded: true, color: 'red' },
+        { id: 3, label: "Node 3", hidden_count: 0, hidden: false,  expanded: true, color: 'red' },
+        { id: 4, label: "Node 4", hidden_count: 0, hidden: false,  expanded: true, color: 'red' },
+        { id: 5, label: "Node 5", hidden_count: 0, hidden: false,  expanded: true, color: 'red' },
     ];
     let child_node_id_dict = {
         2: [1, 3, 4, 5],
