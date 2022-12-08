@@ -6,7 +6,7 @@ asynctest==0.13.0
 attrs==21.2.0
 bidict==0.21.4
 cachetools==4.2.4
-certifi==2021.10.8
+certifi==2022.12.7
 cffi==1.15.0
 charset-normalizer==2.0.8
 click==8.0.3
